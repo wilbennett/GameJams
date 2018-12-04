@@ -8,6 +8,10 @@ export class BlockManager {
     }
 
     draw(ctx) {
-      this.blocks.forEach(block => block.draw(ctx));
+        this.blocks.forEach(block => block.draw(ctx));
+    }
+
+    hasAtLocation(x, y) {
+        return this.blocks.some(block => block.x === x && block.y === y);
     }
 }

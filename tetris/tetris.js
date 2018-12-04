@@ -15,9 +15,8 @@ export class Tetris {
 
         this.canvas = document.getElementById('theCanvas');
         this.context = this.canvas.getContext('2d');
-        this.piece = new Piece();
         this.blockManager = new BlockManager();
-        this.blockManager.addBlocks(this.piece.blocks);
+        this.piece = new Piece(this.blockManager);
         this._animationLoop = window.requestAnimationFrame(() => this._update());
 
         document.addEventListener('keydown', this._keyDownHandler);
@@ -29,10 +28,15 @@ export class Tetris {
     }
 
     _update() {
+        if (this.piece.doneMoving) {
+            this.piece = new Piece(this.blockManager);
+        }
+
         this._clearCanvas();
         this._drawBackground();
         this._drawFrame();
 
+        this.piece.draw(this.context);
         this.blockManager.draw(this.context);
 
         this._animationLoop = window.requestAnimationFrame(() => this._update());
