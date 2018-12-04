@@ -1,34 +1,51 @@
 import { Block } from './block.js'
 
+const topRow = 0;
+const bottomRow = 19;
+const rightCol = 9;
+const leftCol = 0;
+
 export class Piece {
     constructor(blockManager) {
         this._blockManager = blockManager;
         this.blocks = [
-            new Block('#FF0000', 4, 0),
-            new Block('#FF0000', 5, 0),
-            new Block('#FF0000', 4, 1),
-            new Block('#FF0000', 5, 1)
+            new Block('#FF0000', Math.floor(rightCol / 2), topRow),
+            new Block('#FF0000', Math.ceil(rightCol / 2), topRow),
+            new Block('#FF0000', Math.floor(rightCol / 2), topRow + 1),
+            new Block('#FF0000', Math.ceil(rightCol / 2), topRow + 1)
         ];
         this.doneMoving = false;
     }
 
     rotate() {
+        if (this.doneMoving) {
+            return;
+        }
         console.log('yeah, it totally rotated...');
     }
 
     moveLeft() {
+        if (this.doneMoving) {
+            return;
+        }
         if (this._canMoveLeft()) {
             this.blocks.forEach(block => block.move(-1, 0));
         }
     }
 
     moveRight() {
+        if (this.doneMoving) {
+            return;
+        }
         if (this._canMoveRight()) {
             this.blocks.forEach(block => block.move(1, 0));
         }
     }
 
     moveDown() {
+        if (this.doneMoving) {
+            return;
+        }
         if (this._hitBottom() || this._hitBlock()) {
             this._blockManager.addBlocks(this.blocks);
             this.doneMoving = true;
@@ -43,17 +60,18 @@ export class Piece {
     }
 
     _canMoveLeft() {
-        return this.blocks.every(block => block.x > 0) 
+        return this.blocks.every(block => block.x > leftCol) 
             && this.blocks.every(block => !this._blockManager.hasAtLocation(block.x - 1, block.y));
     }   
 
     _canMoveRight() {
-        return this.blocks.every(block => block.x < 9)
+        return this.blocks.every(block => block.x < rightCol)
             && this.blocks.every(block => !this._blockManager.hasAtLocation(block.x + 1, block.y));
     }   
 
     _hitBottom() {
-        return this.blocks.some(block => block.y === 19);
+        let result = this.blocks.some(block => block.y === bottomRow);
+        return result;
     }
 
     _hitBlock() {

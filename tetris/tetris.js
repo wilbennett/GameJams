@@ -32,6 +32,8 @@ export class Tetris {
             this.piece = new Piece(this.blockManager);
         }
 
+        const rowsCleared = this.blockManager.clearCompleteRows();
+
         this._clearCanvas();
         this._drawBackground();
         this._drawFrame();
