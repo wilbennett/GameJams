@@ -1,4 +1,5 @@
 const borderWidth = 10;
+const blockSize = 40;
 
 export class ScreenDisplay {
     constructor(canvas) {
@@ -11,11 +12,11 @@ export class ScreenDisplay {
         this._drawBackground();
         this._drawFrame();
 
-        piece.blocks.forEach(block => block.draw(this._context));
+        piece.blocks.forEach(block => this._drawBlock(block));
         blockManager.grid.forEach(row => {
             row
               .filter(block => block !== null)
-              .forEach(block => block.draw(this._context));
+              .forEach(block => this._drawBlock(block));
         });
     }
 
@@ -34,5 +35,14 @@ export class ScreenDisplay {
     _drawBackground() {
         this._context.fillStyle = '#333333';
         this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
+    }
+
+    _drawBlock(block) {
+        const ctx = this._context;
+        ctx.fillStyle = block.color;
+        const x = block.x * blockSize + 1 + 10;
+        const y = block.y * blockSize + 1;
+        const size = blockSize - 2;
+        ctx.fillRect(x, y, size, size);
     }
 }
