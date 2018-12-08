@@ -1,5 +1,7 @@
 const borderWidth = 10;
-const blockSize = 40;
+const gridSize = 40;
+const paddingSize = 1;
+const blockSize = gridSize - (paddingSize * 2);
 
 export class ScreenDisplay {
     constructor(canvas) {
@@ -40,9 +42,8 @@ export class ScreenDisplay {
     _drawBlock(block) {
         const ctx = this._context;
         ctx.fillStyle = block.color;
-        const x = block.x * blockSize + 1 + 10;
-        const y = block.y * blockSize + 1;
-        const size = blockSize - 2;
-        ctx.fillRect(x, y, size, size);
+        const x = block.x * gridSize + paddingSize + borderWidth;
+        const y = block.y * gridSize + paddingSize;
+        ctx.fillRect(x, y, blockSize, blockSize);
     }
 }
