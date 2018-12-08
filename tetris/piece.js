@@ -55,10 +55,6 @@ export class Piece {
         }
     }
 
-    draw(ctx) {
-        this.blocks.forEach(block => block.draw(ctx));
-    }
-
     _canMoveLeft() {
         return this.blocks.every(block => block.x > leftCol) 
             && this.blocks.every(block => !this._blockManager.hasAtLocation(block.x - 1, block.y));

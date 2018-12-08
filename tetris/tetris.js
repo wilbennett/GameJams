@@ -1,7 +1,6 @@
 import { Piece } from './piece.js';
 import { BlockManager } from './blockManager.js';
-
-const borderWidth = 10;
+import { ScreenDisplay } from './screenDisplay.js';
 
 export class Tetris {
     constructor() {
@@ -14,7 +13,8 @@ export class Tetris {
         console.log('App Starting...');
 
         this.canvas = document.getElementById('theCanvas');
-        this.context = this.canvas.getContext('2d');
+
+        this._screenDisplay = new ScreenDisplay(this.canvas);
         this.blockManager = new BlockManager();
         this.piece = new Piece(this.blockManager);
         this._animationLoop = window.requestAnimationFrame(() => this._update());
@@ -34,31 +34,9 @@ export class Tetris {
 
         const rowsCleared = this.blockManager.clearCompleteRows();
 
-        this._clearCanvas();
-        this._drawBackground();
-        this._drawFrame();
-
-        this.piece.draw(this.context);
-        this.blockManager.draw(this.context);
+        this._screenDisplay.draw(this.piece, this.blockManager);
 
         this._animationLoop = window.requestAnimationFrame(() => this._update());
-    }
-
-    _clearCanvas() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    _drawFrame() {
-        const ctx = this.context;
-        ctx.strokeStyle = '#CCCCCC';
-        ctx.lineWidth = borderWidth;
-        ctx.rect(borderWidth / 2, borderWidth / -2, this.canvas.width - borderWidth, this.canvas.height);
-        ctx.stroke();
-    }
-
-    _drawBackground() {
-        this.context.fillStyle = '#333333';
-        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     _onKeyDown(event) {
