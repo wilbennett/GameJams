@@ -5,15 +5,54 @@ const bottomRow = 19;
 const rightCol = 9;
 const leftCol = 0;
 
+const blockTypes = [
+    {
+        name: 'Square',
+        color:'#FF0000',
+        blockLocations: [
+            { xRel:0, yRel:0 },
+            { xRel:0, yRel:1 },
+            { xRel:1, yRel:0 },
+            { xRel:1, yRel:1 },
+        ]
+    },
+    {
+        name: 'Line',
+        color:'#0000FF',
+        blockLocations: [
+            { xRel:0, yRel:0 },
+            { xRel:0, yRel:1 },
+            { xRel:0, yRel:2 },
+            { xRel:0, yRel:3 },
+        ]
+    },
+    {
+        name: 'LBlock',
+        color:'#00CCFF',
+        blockLocations: [
+            { xRel:0, yRel:0 },
+            { xRel:0, yRel:1 },
+            { xRel:0, yRel:2 },
+            { xRel:1, yRel:2 },
+        ]
+    },
+    {
+        name: 'ReverseLBlock',
+        color:'#00FFCC',
+        blockLocations: [
+            { xRel:1, yRel:0 },
+            { xRel:1, yRel:1 },
+            { xRel:1, yRel:2 },
+            { xRel:0, yRel:2 },
+        ]
+    },
+];
+
 export class Piece {
     constructor(blockManager) {
         this._blockManager = blockManager;
-        this.blocks = [
-            new Block('#FF0000', Math.floor(rightCol / 2), topRow),
-            new Block('#FF0000', Math.ceil(rightCol / 2), topRow),
-            new Block('#FF0000', Math.floor(rightCol / 2), topRow + 1),
-            new Block('#FF0000', Math.ceil(rightCol / 2), topRow + 1)
-        ];
+        const blockType = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+        this.blocks = this._createBlocksForType(blockType, Math.floor(rightCol / 2), topRow);
         this.doneMoving = false;
     }
 
@@ -53,6 +92,12 @@ export class Piece {
         else {
             this.blocks.forEach(block => block.move(0, 1));
         }
+    }
+
+    _createBlocksForType(blockType, x, y) {
+        let blocks = [];
+        blockType.blockLocations.forEach(loc => blocks.push(new Block(blockType.color, x + loc.xRel, y + loc.yRel)));
+        return blocks;
     }
 
     _canMoveLeft() {
