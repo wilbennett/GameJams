@@ -7,6 +7,7 @@ export class Tetris {
         // TODO: Set up the initial stuff.
         console.log('In Tetris Constructor...');
         this._keyDownHandler = this._onKeyDown.bind(this);
+        this._updateHandler = this._update.bind(this);
     }
 
     start() {
@@ -17,7 +18,7 @@ export class Tetris {
         this._screenDisplay = new ScreenDisplay(this.canvas);
         this.blockManager = new BlockManager();
         this.piece = new Piece(this.blockManager);
-        this._animationLoop = window.requestAnimationFrame(() => this._update());
+        this._animationLoop = window.requestAnimationFrame(this._updateHandler);
 
         document.addEventListener('keydown', this._keyDownHandler);
     }
@@ -36,7 +37,7 @@ export class Tetris {
 
         this._screenDisplay.draw(this.piece, this.blockManager);
 
-        this._animationLoop = window.requestAnimationFrame(() => this._update());
+        this._animationLoop = window.requestAnimationFrame(this._updateHandler);
     }
 
     _onKeyDown(event) {
