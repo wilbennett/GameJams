@@ -1,57 +1,15 @@
 import { Block } from './block.js'
+import { BlockTypes } from './gameData.js'
 
 const topRow = 0;
 const bottomRow = 19;
 const rightCol = 9;
 const leftCol = 0;
 
-const blockTypes = [
-    {
-        name: 'Square',
-        color:'#FF0000',
-        blockLocations: [
-            { xRel:0, yRel:0 },
-            { xRel:0, yRel:1 },
-            { xRel:1, yRel:0 },
-            { xRel:1, yRel:1 },
-        ]
-    },
-    {
-        name: 'Line',
-        color:'#0000FF',
-        blockLocations: [
-            { xRel:0, yRel:0 },
-            { xRel:0, yRel:1 },
-            { xRel:0, yRel:2 },
-            { xRel:0, yRel:3 },
-        ]
-    },
-    {
-        name: 'LBlock',
-        color:'#00CCFF',
-        blockLocations: [
-            { xRel:0, yRel:0 },
-            { xRel:0, yRel:1 },
-            { xRel:0, yRel:2 },
-            { xRel:1, yRel:2 },
-        ]
-    },
-    {
-        name: 'ReverseLBlock',
-        color:'#00FFCC',
-        blockLocations: [
-            { xRel:1, yRel:0 },
-            { xRel:1, yRel:1 },
-            { xRel:1, yRel:2 },
-            { xRel:0, yRel:2 },
-        ]
-    },
-];
-
 export class Piece {
     constructor(blockManager) {
         this._blockManager = blockManager;
-        const blockType = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+        const blockType = BlockTypes[Math.floor(Math.random() * BlockTypes.length)];
         this.blocks = this._createBlocksForType(blockType, Math.floor(rightCol / 2), topRow);
         this.doneMoving = false;
     }
