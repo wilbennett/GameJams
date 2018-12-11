@@ -8,14 +8,6 @@ export class BlockManager {
         blocks.forEach(block => this.grid[block.y][block.x] = block);
     }
 
-    draw(ctx) {
-        this.grid.forEach(row => {
-            row
-              .filter(b => b !== null)
-              .forEach(block => block.draw(ctx));
-        });
-    }
-
     hasAtLocation(x, y) {
         return this.grid[y][x] !== null;
     }

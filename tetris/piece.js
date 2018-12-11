@@ -1,4 +1,5 @@
 import { Block } from './block.js'
+import { BlockTypes } from './gameData.js'
 
 const topRow = 0;
 const bottomRow = 19;
@@ -8,12 +9,8 @@ const leftCol = 0;
 export class Piece {
     constructor(blockManager) {
         this._blockManager = blockManager;
-        this.blocks = [
-            new Block('#FF0000', Math.floor(rightCol / 2), topRow),
-            new Block('#FF0000', Math.ceil(rightCol / 2), topRow),
-            new Block('#FF0000', Math.floor(rightCol / 2), topRow + 1),
-            new Block('#FF0000', Math.ceil(rightCol / 2), topRow + 1)
-        ];
+        const blockType = BlockTypes[Math.floor(Math.random() * BlockTypes.length)];
+        this.blocks = this._createBlocksForType(blockType, Math.floor(rightCol / 2), topRow);
         this.doneMoving = false;
     }
 
@@ -55,8 +52,10 @@ export class Piece {
         }
     }
 
-    draw(ctx) {
-        this.blocks.forEach(block => block.draw(ctx));
+    _createBlocksForType(blockType, x, y) {
+        let blocks = [];
+        blockType.blockLocations.forEach(loc => blocks.push(new Block(blockType.color, x + loc.xRel, y + loc.yRel)));
+        return blocks;
     }
 
     _canMoveLeft() {
