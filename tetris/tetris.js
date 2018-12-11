@@ -4,15 +4,11 @@ import { ScreenDisplay } from './screenDisplay.js';
 
 export class Tetris {
     constructor() {
-        // TODO: Set up the initial stuff.
-        console.log('In Tetris Constructor...');
         this._keyDownHandler = this._onKeyDown.bind(this);
         this._updateHandler = this._update.bind(this);
     }
 
     start() {
-        console.log('App Starting...');
-
         this._updateCounter = 0;
 
         this.canvas = document.getElementById('theCanvas');
