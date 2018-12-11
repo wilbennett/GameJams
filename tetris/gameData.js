@@ -1,7 +1,7 @@
 export const BlockTypes = [
     {
         name: 'Square',
-        color:'#FF0000',
+        color:'#FF1111',
         blockLocations: [
             { xRel:0, yRel:0 },
             { xRel:0, yRel:1 },
@@ -11,7 +11,7 @@ export const BlockTypes = [
     },
     {
         name: 'Line',
-        color:'#0000FF',
+        color:'#1111FF',
         blockLocations: [
             { xRel:0, yRel:0 },
             { xRel:0, yRel:1 },
@@ -37,6 +37,36 @@ export const BlockTypes = [
             { xRel:1, yRel:1 },
             { xRel:1, yRel:2 },
             { xRel:0, yRel:2 },
+        ]
+    },
+    {
+        name: 'Squiggly',
+        color:'#FFCC00',
+        blockLocations: [
+            { xRel:0, yRel:1 },
+            { xRel:1, yRel:0 },
+            { xRel:1, yRel:1 },
+            { xRel:2, yRel:0 },
+        ]
+    },
+    {
+        name: 'ReverseSquiggly',
+        color:'#CCFF00',
+        blockLocations: [
+            { xRel:0, yRel:0 },
+            { xRel:1, yRel:0 },
+            { xRel:1, yRel:1 },
+            { xRel:2, yRel:1 },
+        ]
+    },
+    {
+        name: 'TeeBlock',
+        color:'#CC00CC',
+        blockLocations: [
+            { xRel:1, yRel:0 },
+            { xRel:0, yRel:1 },
+            { xRel:1, yRel:1 },
+            { xRel:2, yRel:1 },
         ]
     },
 ];
