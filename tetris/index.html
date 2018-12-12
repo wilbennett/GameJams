@@ -1,14 +1,34 @@
 <html>
 <head>
     <script src="tetris.js" type="module"></script>
+    <style>
+        #canvasWrapper {
+            position:relative;
+            width:420px;
+            height:810px;
+        }
+        #bgCanvas {
+            position:absolute; top:0px; left:0px;
+        }
+        #gridCanvas {
+            position:absolute; top:0px; left:10px;
+        }
+    </style>
 </head>
 <body>
-<canvas id="theCanvas" width="420" height="810">
-</canvas>
-<h3>Information</h3>
-<span>Points: 0</span>
-<span>Rows: 0</span>
-<span>Pieces: 0</span>
-<span>Line Piece Drought: 0</span>
+    <div id="game">
+        <div id="canvasWrapper">
+                <canvas id="bgCanvas" width="420" height="810"></canvas>
+                <canvas id="gridCanvas" width="400" height="800"></canvas>
+        </div>
+        <div id="infoPanel">
+            <h3>Information</h3>
+            <p id="fps">FPS: 0</p>
+            <p>Points: 0</p>
+            <p>Rows: 0</p>
+            <p>Pieces: 0</p>
+            <p>Line Piece Drought: 0</p>
+        </div>
+    </div>
 </body>
 </html>

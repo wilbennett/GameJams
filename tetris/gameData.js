@@ -1,4 +1,4 @@
-export const BlockTypes = [
+export const PieceTypeData = [
     {
         name: 'Square',
         color:'#FF1111',
