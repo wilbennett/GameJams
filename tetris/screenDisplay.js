@@ -13,7 +13,7 @@ export class ScreenDisplay {
 
     draw(piece, blockManager) {
         this._clearCanvas();
-        piece.blocks.forEach(block => this._drawBlock(block));
+        piece.realLocationBlocks.forEach(block => this._drawBlock(block));
         blockManager.grid.forEach(row => {
             row
               .filter(block => block !== null)

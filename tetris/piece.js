@@ -18,6 +18,14 @@ export class Piece {
         this.doneMoving = false;
     }
 
+    get realLocationBlocks() {
+        return this.blocks.map(block => ({ 
+            color: block.color, 
+            x: this.x + block.x, 
+            y: this.y + block.y 
+        }));
+    }
+
     rotate() {
         if (this.doneMoving) {
             return;
@@ -29,8 +37,8 @@ export class Piece {
             for (let index = 0; index < this.blocks.length; index++) {
                 const block = this.blocks[index];
                 const newLoc = newLocations[index];
-                block.x = this.x + newLoc.xRel;
-                block.y = this.y + newLoc.yRel;
+                block.x = newLoc.xRel;
+                block.y = newLoc.yRel;
             }
         }
     }
@@ -41,7 +49,6 @@ export class Piece {
         }
         if (this._canMoveLeft()) {
             this.x -= 1;
-            this.blocks.forEach(block => block.move(-1, 0));
         }
     }
 
@@ -51,7 +58,6 @@ export class Piece {
         }
         if (this._canMoveRight()) {
             this.x += 1;
-            this.blocks.forEach(block => block.move(1, 0));
         }
     }
 
@@ -60,12 +66,11 @@ export class Piece {
             return;
         }
         if (this._hitBottom() || this._hitBlock()) {
-            this._blockManager.addBlocks(this.blocks);
+            this._blockManager.addBlocks(this.realLocationBlocks);
             this.doneMoving = true;
         }
         else {
             this.y += 1;
-            this.blocks.forEach(block => block.move(0, 1));
         }
     }
 
@@ -81,21 +86,21 @@ export class Piece {
     }
 
     _canMoveLeft() {
-        return this.blocks.every(block => block.x > leftCol) 
-            && this.blocks.every(block => !this._blockManager.hasAtLocation(block.x - 1, block.y));
+        return this.realLocationBlocks.every(block => block.x > leftCol) 
+            && this.realLocationBlocks.every(block => !this._blockManager.hasAtLocation(block.x - 1, block.y));
     }   
 
     _canMoveRight() {
-        return this.blocks.every(block => block.x < rightCol)
-            && this.blocks.every(block => !this._blockManager.hasAtLocation(block.x + 1, block.y));
+        return this.realLocationBlocks.every(block => block.x < rightCol)
+            && this.realLocationBlocks.every(block => !this._blockManager.hasAtLocation(block.x + 1, block.y));
     }   
 
     _hitBottom() {
-        let result = this.blocks.some(block => block.y === bottomRow);
+        let result = this.realLocationBlocks.some(block => block.y === bottomRow);
         return result;
     }
 
     _hitBlock() {
-        return this.blocks.some(block => this._blockManager.hasAtLocation(block.x, block.y + 1));
+        return this.realLocationBlocks.some(block => this._blockManager.hasAtLocation(block.x, block.y + 1));
     }
 }
