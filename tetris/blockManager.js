@@ -6,13 +6,14 @@ export class BlockManager {
 
     addBlocks(blocks) {
         blocks.forEach(block => this.grid[block.y][block.x] = block);
+        this.clearCompleteRows(blocks.map(block => block.y));
     }
 
     hasAtLocation(x, y) {
         return this.grid[y][x] !== null;
     }
 
-    clearCompleteRows() {
+    clearCompleteRows(rowsToCheck) {
         this.grid = this.grid.filter(row => row.some(block => block === null));
         let countRemoved = 20 - this.grid.length;
         if (countRemoved > 0) {

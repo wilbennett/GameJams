@@ -4,16 +4,15 @@ const paddingSize = 1;
 const blockSize = gridSize - (paddingSize * 2);
 
 export class ScreenDisplay {
-    constructor(canvas) {
+    constructor(canvas, bgCanvas) {
         this._canvas = canvas;
+        this._bgCanvas = bgCanvas;
         this._context = this._canvas.getContext('2d');
+        this._bgContext = this._bgCanvas.getContext('2d');
     }
 
     draw(piece, blockManager) {
         this._clearCanvas();
-        this._drawBackground();
-        this._drawFrame();
-
         piece.blocks.forEach(block => this._drawBlock(block));
         blockManager.grid.forEach(row => {
             row
@@ -26,24 +25,19 @@ export class ScreenDisplay {
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
     }
 
-    _drawFrame() {
-        const ctx = this._context;
-        ctx.strokeStyle = '#CCCCCC';
-        ctx.lineWidth = borderWidth;
-        ctx.rect(borderWidth / 2, borderWidth / -2, this._canvas.width - borderWidth, this._canvas.height);
-        ctx.stroke();
-    }
-
-    _drawBackground() {
-        this._context.fillStyle = '#333333';
-        this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
+    drawBackground() {
+        this._bgContext.fillStyle = '#333333';
+        this._bgContext.fillRect(0, 0, this._bgCanvas.width, this._bgCanvas.height);
+        this._bgContext.strokeStyle = '#CCCCCC';
+        this._bgContext.lineWidth = borderWidth;
+        this._bgContext.rect(borderWidth / 2, borderWidth / -2, this._bgCanvas.width - borderWidth, this._bgCanvas.height);
+        this._bgContext.stroke();
     }
 
     _drawBlock(block) {
-        const ctx = this._context;
-        ctx.fillStyle = block.color;
-        const x = block.x * gridSize + paddingSize + borderWidth;
+        this._context.fillStyle = block.color;
+        const x = block.x * gridSize + paddingSize;
         const y = block.y * gridSize + paddingSize;
-        ctx.fillRect(x, y, blockSize, blockSize);
+        this._context.fillRect(x, y, blockSize, blockSize);
     }
 }

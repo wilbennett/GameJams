@@ -2,6 +2,9 @@ import { Piece } from './piece.js';
 import { BlockManager } from './blockManager.js';
 import { ScreenDisplay } from './screenDisplay.js';
 
+const times = [];
+let fps;
+
 export class Tetris {
     constructor() {
         this._keyDownHandler = this._onKeyDown.bind(this);
@@ -11,9 +14,12 @@ export class Tetris {
     start() {
         this._updateCounter = 0;
 
-        this.canvas = document.getElementById('theCanvas');
+        const canvas = document.getElementById('gridCanvas');
+        const bgCanvas = document.getElementById('bgCanvas');
+        this.fpsDisplay = document.getElementById('fps');
 
-        this._screenDisplay = new ScreenDisplay(this.canvas);
+        this._screenDisplay = new ScreenDisplay(canvas, bgCanvas);
+        this._screenDisplay.drawBackground();
         this.blockManager = new BlockManager();
         this.piece = new Piece(this.blockManager);
         this._animationLoop = window.requestAnimationFrame(this._updateHandler);
@@ -27,7 +33,11 @@ export class Tetris {
     }
 
     _update() {
-        this._animationLoop = window.requestAnimationFrame(this._updateHandler);
+        const now = performance.now();
+        while (times.length > 0 && times[0] <= now - 1000) { times.shift(); }
+        times.push(now);
+        fps = times.length;
+        this.fpsDisplay.innerText = `FPS ${fps}`;
 
         this._updateCounter++;
         if (this.piece.doneMoving) {
@@ -38,9 +48,8 @@ export class Tetris {
             this.piece.moveDown();
         }
 
-        const rowsCleared = this.blockManager.clearCompleteRows();
-
         this._screenDisplay.draw(this.piece, this.blockManager);
+        this._animationLoop = window.requestAnimationFrame(this._updateHandler);
     }
 
     _onKeyDown(event) {

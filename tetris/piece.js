@@ -1,5 +1,5 @@
 import { Block } from './block.js'
-import { BlockTypes } from './gameData.js'
+import { PieceTypeData } from './gameData.js'
 
 const topRow = 0;
 const bottomRow = 19;
@@ -9,7 +9,7 @@ const leftCol = 0;
 export class Piece {
     constructor(blockManager) {
         this._blockManager = blockManager;
-        const blockType = BlockTypes[Math.floor(Math.random() * BlockTypes.length)];
+        const blockType = PieceTypeData[Math.floor(Math.random() * PieceTypeData.length)];
         this.blocks = this._createBlocksForType(blockType, Math.floor(rightCol / 2), topRow);
         this.doneMoving = false;
     }
