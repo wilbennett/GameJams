@@ -13,17 +13,13 @@ export class Piece {
         this._blockManager = blockManager;
         this._pieceType = PieceTypeData[Math.floor(Math.random() * PieceTypeData.length)];
         this._rotationIndex = -1;
-        this.blocks = [];
+        this.localBlocks = [];
         this._createBlocks();
         this.doneMoving = false;
     }
 
-    get realLocationBlocks() {
-        return this.blocks.map(block => ({ 
-            color: block.color, 
-            x: this.x + block.x, 
-            y: this.y + block.y 
-        }));
+    get blocks() {
+        return this.localBlocks.map(block => new Block(block.color, this.x + block.x, this.y + block.y));
     }
 
     rotate() {
@@ -34,8 +30,8 @@ export class Piece {
         const newLocations = this._pieceType.blockLocations[this._rotationIndex];
         
         if (this._canRotate(newLocations)) {
-            for (let index = 0; index < this.blocks.length; index++) {
-                const block = this.blocks[index];
+            for (let index = 0; index < this.localBlocks.length; index++) {
+                const block = this.localBlocks[index];
                 const newLoc = newLocations[index];
                 block.x = newLoc.xRel;
                 block.y = newLoc.yRel;
@@ -66,7 +62,7 @@ export class Piece {
             return;
         }
         if (this._hitBottom() || this._hitBlock()) {
-            this._blockManager.addBlocks(this.realLocationBlocks);
+            this._blockManager.addBlocks(this.blocks);
             this.doneMoving = true;
         }
         else {
@@ -76,7 +72,7 @@ export class Piece {
 
     _createBlocks() {
         for (let index = 0; index < 4; index++) {
-            this.blocks.push(new Block(this._pieceType.color, 0, 0));
+            this.localBlocks.push(new Block(this._pieceType.color, 0, 0));
         }
         this.rotate();
     }
@@ -86,21 +82,21 @@ export class Piece {
     }
 
     _canMoveLeft() {
-        return this.realLocationBlocks.every(block => block.x > leftCol) 
-            && this.realLocationBlocks.every(block => !this._blockManager.hasAtLocation(block.x - 1, block.y));
+        return this.blocks.every(block => block.x > leftCol) 
+            && this.blocks.every(block => !this._blockManager.hasAtLocation(block.x - 1, block.y));
     }   
 
     _canMoveRight() {
-        return this.realLocationBlocks.every(block => block.x < rightCol)
-            && this.realLocationBlocks.every(block => !this._blockManager.hasAtLocation(block.x + 1, block.y));
+        return this.blocks.every(block => block.x < rightCol)
+            && this.blocks.every(block => !this._blockManager.hasAtLocation(block.x + 1, block.y));
     }   
 
     _hitBottom() {
-        let result = this.realLocationBlocks.some(block => block.y === bottomRow);
+        let result = this.blocks.some(block => block.y === bottomRow);
         return result;
     }
 
     _hitBlock() {
-        return this.realLocationBlocks.some(block => this._blockManager.hasAtLocation(block.x, block.y + 1));
+        return this.blocks.some(block => this._blockManager.hasAtLocation(block.x, block.y + 1));
     }
 }
