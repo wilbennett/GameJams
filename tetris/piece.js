@@ -13,13 +13,9 @@ export class Piece {
         this._blockManager = blockManager;
         this._pieceType = PieceTypeData[Math.floor(Math.random() * PieceTypeData.length)];
         this._rotationIndex = -1;
-        this.localBlocks = [];
+        this.blocks = [];
         this._createBlocks();
         this.doneMoving = false;
-    }
-
-    get blocks() {
-        return this.localBlocks.map(block => new Block(block.color, this.x + block.x, this.y + block.y));
     }
 
     rotate() {
@@ -30,11 +26,11 @@ export class Piece {
         const newLocations = this._pieceType.blockLocations[this._rotationIndex];
         
         if (this._canRotate(newLocations)) {
-            for (let index = 0; index < this.localBlocks.length; index++) {
-                const block = this.localBlocks[index];
+            for (let index = 0; index < this.blocks.length; index++) {
+                const block = this.blocks[index];
                 const newLoc = newLocations[index];
-                block.x = newLoc.xRel;
-                block.y = newLoc.yRel;
+                block.xRel = newLoc.xRel;
+                block.yRel = newLoc.yRel;
             }
         }
     }
@@ -72,7 +68,7 @@ export class Piece {
 
     _createBlocks() {
         for (let index = 0; index < 4; index++) {
-            this.localBlocks.push(new Block(this._pieceType.color, 0, 0));
+            this.blocks.push(new Block(this._pieceType.color, 0, 0, this));
         }
         this.rotate();
     }
