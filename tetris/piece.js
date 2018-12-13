@@ -23,14 +23,15 @@ export class Piece {
             return;
         }
         this._rotationIndex = (this._rotationIndex + 1) % this._pieceType.blockLocations.length;
-
         const newLocations = this._pieceType.blockLocations[this._rotationIndex];
-
-        for (let index = 0; index < this.blocks.length; index++) {
-            const block = this.blocks[index];
-            const newLoc = newLocations[index];
-            block.x = this.x + newLoc.xRel;
-            block.y = this.y + newLoc.yRel;
+        
+        if (this._canRotate(newLocations)) {
+            for (let index = 0; index < this.blocks.length; index++) {
+                const block = this.blocks[index];
+                const newLoc = newLocations[index];
+                block.x = this.x + newLoc.xRel;
+                block.y = this.y + newLoc.yRel;
+            }
         }
     }
 
@@ -73,6 +74,10 @@ export class Piece {
             this.blocks.push(new Block(this._pieceType.color, 0, 0));
         }
         this.rotate();
+    }
+
+    _canRotate(newLocations) {
+        return newLocations.every(loc => !this._blockManager.hasAtLocation(this.x + loc.xRel, this.y + loc.yRel));
     }
 
     _canMoveLeft() {
