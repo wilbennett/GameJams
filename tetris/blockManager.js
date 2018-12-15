@@ -2,10 +2,15 @@ export class BlockManager {
     constructor() {
         this.grid = [];
         this._addEmptyRows(20);
+        this.x = 0;
+        this.y = 0;
     }
 
     addBlocks(blocks) {
-        blocks.forEach(block => this.grid[block.y][block.x] = block);
+        blocks.forEach(block => {
+            block.container = this;
+            this.grid[block.y][block.x] = block;
+        });
         this.clearCompleteRows(blocks.map(block => block.y));
     }
 

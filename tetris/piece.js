@@ -8,9 +8,13 @@ const leftCol = 0;
 
 export class Piece {
     constructor(blockManager) {
+        this.x = 3;
+        this.y = 0;
         this._blockManager = blockManager;
-        const blockType = PieceTypeData[Math.floor(Math.random() * PieceTypeData.length)];
-        this.blocks = this._createBlocksForType(blockType, Math.floor(rightCol / 2), topRow);
+        this._pieceType = PieceTypeData[Math.floor(Math.random() * PieceTypeData.length)];
+        this._rotationIndex = -1;
+        this.blocks = [];
+        this._createBlocks();
         this.doneMoving = false;
     }
 
@@ -18,7 +22,17 @@ export class Piece {
         if (this.doneMoving) {
             return;
         }
-        console.log('yeah, it totally rotated...');
+        this._rotationIndex = (this._rotationIndex + 1) % this._pieceType.blockLocations.length;
+        const newLocations = this._pieceType.blockLocations[this._rotationIndex];
+        
+        if (this._canRotate(newLocations)) {
+            for (let index = 0; index < this.blocks.length; index++) {
+                const block = this.blocks[index];
+                const newLoc = newLocations[index];
+                block.xRel = newLoc.xRel;
+                block.yRel = newLoc.yRel;
+            }
+        }
     }
 
     moveLeft() {
@@ -26,7 +40,7 @@ export class Piece {
             return;
         }
         if (this._canMoveLeft()) {
-            this.blocks.forEach(block => block.move(-1, 0));
+            this.x -= 1;
         }
     }
 
@@ -35,7 +49,7 @@ export class Piece {
             return;
         }
         if (this._canMoveRight()) {
-            this.blocks.forEach(block => block.move(1, 0));
+            this.x += 1;
         }
     }
 
@@ -48,14 +62,19 @@ export class Piece {
             this.doneMoving = true;
         }
         else {
-            this.blocks.forEach(block => block.move(0, 1));
+            this.y += 1;
         }
     }
 
-    _createBlocksForType(blockType, x, y) {
-        let blocks = [];
-        blockType.blockLocations.forEach(loc => blocks.push(new Block(blockType.color, x + loc.xRel, y + loc.yRel)));
-        return blocks;
+    _createBlocks() {
+        for (let index = 0; index < 4; index++) {
+            this.blocks.push(new Block(this._pieceType.color, 0, 0, this));
+        }
+        this.rotate();
+    }
+
+    _canRotate(newLocations) {
+        return newLocations.every(loc => !this._blockManager.hasAtLocation(this.x + loc.xRel, this.y + loc.yRel));
     }
 
     _canMoveLeft() {
