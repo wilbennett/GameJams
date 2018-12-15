@@ -4,52 +4,32 @@ import { ScreenDisplay } from './screenDisplay.js';
 
 const times = [];
 let fps;
-const canvas = document.getElementById('gridCanvas');
-const bgCanvas = document.getElementById('bgCanvas');
 
 export class Tetris {
     constructor() {
         this._keyDownHandler = this._onKeyDown.bind(this);
         this._updateHandler = this._update.bind(this);
-
-        this.fpsDisplay = document.getElementById('fps');
-
-        this.startKeyMappings = {
-            13: () => this.start(),
-            32: () => this.start(),
-        };
-        this.gameKeyMappings = {
-            87:() =>  this.piece.rotate(), // w
-            38: () => this.piece.rotate(), // up
-            65: () => this.piece.moveLeft(), // a
-            37: () => this.piece.moveLeft(), // left
-            83: () => this.piece.moveDown(), // s
-            40: () => this.piece.moveDown(), // down
-            68: () => this.piece.moveRight(), // d
-            39: () => this.piece.moveRight(), // right
-        };
-    }
-
-    initialize() {
-        this.keyMap = this.startKeyMappings;
-        this._screenDisplay = new ScreenDisplay(canvas, bgCanvas);
-        this._screenDisplay.drawBackground();
-        this._screenDisplay.displayStartScreen();
-        document.addEventListener('keydown', this._keyDownHandler);
     }
 
     start() {
-        this.keyMap = this.gameKeyMappings;
         this._updateCounter = 0;
 
+        const canvas = document.getElementById('gridCanvas');
+        const bgCanvas = document.getElementById('bgCanvas');
+        this.fpsDisplay = document.getElementById('fps');
+
+        this._screenDisplay = new ScreenDisplay(canvas, bgCanvas);
+        this._screenDisplay.drawBackground();
         this.blockManager = new BlockManager();
         this.piece = new Piece(this.blockManager);
         this._animationLoop = window.requestAnimationFrame(this._updateHandler);
+
+        document.addEventListener('keydown', this._keyDownHandler);
     }
 
     stop() {
         window.cancelAnimationFrame(this._animationLoop);
-        document.removeEventListener('keydown', this._keyDownHandler); // switch to other mappings?
+        document.removeEventListener('keydown', this._keyDownHandler);
     }
 
     _update() {
@@ -73,29 +53,28 @@ export class Tetris {
     }
 
     _onKeyDown(event) {
-        this.keyMap[event.keyCode]();
-        // switch (event.keyCode) {
-        //     case 87: // w
-        //     case 38: // up
-        //         this.piece.rotate();
-        //         break;
-        //     case 65: // a
-        //     case 37: // left
-        //         this.piece.moveLeft();
-        //         break;
-        //     case 83: // s
-        //     case 40: // down
-        //         this.piece.moveDown();
-        //         break;
-        //     case 68: // d
-        //     case 39: // right
-        //         this.piece.moveRight();
-        //         break;
-        //     default:
-        //         break;
-        // }
+        switch (event.keyCode) {
+            case 87: // w
+            case 38: // up
+                this.piece.rotate();
+                break;
+            case 65: // a
+            case 37: // left
+                this.piece.moveLeft();
+                break;
+            case 83: // s
+            case 40: // down
+                this.piece.moveDown();
+                break;
+            case 68: // d
+            case 39: // right
+                this.piece.moveRight();
+                break;
+            default:
+                break;
+        }
     }
 }
 
 let app = new Tetris()
-app.initialize();
+app.start();
